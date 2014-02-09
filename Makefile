@@ -11,6 +11,7 @@ all: pop74.1
 all: tests
 
 libpop.a: album.o
+libpop.a: child.o
 libpop.a: find.o
 libpop.a: basename.o
 	$(AR) -r $@ $^
