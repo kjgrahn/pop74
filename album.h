@@ -42,18 +42,17 @@ public:
     explicit Album(const std::string& path);
     Album& push_back(const char* name);
 
-    bool operator< (const Album& other) const;
     bool empty() const { return names.empty(); }
-
-    typedef std::vector<std::string>::const_iterator const_iterator;
-    const_iterator begin() const { return names.begin(); }
-    const_iterator end() const { return names.end(); }
 
     std::ostream& put(std::ostream& os) const;
 
 private:
     std::string path;
     std::vector<std::string> names;
+
+    typedef std::vector<std::string>::const_iterator const_iterator;
+    const_iterator begin() const { return names.begin(); }
+    const_iterator end() const { return names.end(); }
 };
 
 std::ostream& operator<< (std::ostream& os, const Album& val);

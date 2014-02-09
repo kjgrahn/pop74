@@ -43,10 +43,10 @@ install: all
 	install -m555 pop74 $(INSTALLBASE)/bin/
 	install -m644 pop74.1 $(INSTALLBASE)/man/man1/
 
-.PHONY: tags
+.PHONY: tags TAGS
 tags: TAGS
 TAGS:
-	etags *.{c,h,cc}
+	etags *.{h,cc}
 
 .PHONY: depend
 depend:

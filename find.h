@@ -30,7 +30,6 @@
 
 #include "album.h"
 
-#include <iosfwd>
 #include <vector>
 
 namespace pop {

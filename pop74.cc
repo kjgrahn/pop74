@@ -38,6 +38,19 @@ namespace {
     {
 	return "0.1";
     }
+
+    void pop74(const char* directory)
+    {
+        std::vector<Album> v;
+
+	pop::find(v, directory);
+	for(std::vector<Album>::const_iterator i = v.begin();
+	    i != v.end();
+	    i++) {
+
+	    std::cout << *i << '\n';
+	}
+    }
 }
 
 
@@ -93,15 +106,7 @@ int main(int argc, char ** argv)
 
     const char* const directory = argv[optind];
 
-    std::vector<Album> v;
-
-    pop::find(v, directory);
-    for(std::vector<Album>::const_iterator i = v.begin();
-	i != v.end();
-	i++) {
-
-	std::cout << *i << '\n';
-    }
+    pop74(directory);
 
     return 0;
 }
