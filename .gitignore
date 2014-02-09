@@ -1,0 +1,6 @@
+pop74
+tests
+test.cc
+version.c
+*.[oa]
+Makefile.bak
