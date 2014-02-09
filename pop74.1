@@ -1,0 +1,66 @@
+.ss 12 0
+.de BP
+.IP \\fB\\$*
+..
+.
+.
+.TH pop74 1 "FEB 2014" POP74 "User Manuals"
+.SH "NAME"
+pop74 \- album-oriented Ogg Vorbis/mp3 player
+.
+.SH "SYNOPSIS"
+.B pop74
+.I directory
+.br
+.B pop74
+.BR --version | --help
+.
+.SH "DESCRIPTION"
+.B pop74
+simply takes a directory and starts playing it forever,
+under the assumption that the subdirectories are albums and the
+files are
+.B "Ogg Vorbis"
+or
+.B mp3
+audio tracks.
+It uses and needs
+.BR ogg123 (1)
+and
+.BR mpg321 (1)
+to do this.
+.
+.PP
+.B pop74
+assumes you're an album kind of guy, who wants to listen to full
+albums, from the first track on side A to the last one on side B.
+The albums, however, are played in a randomized order.
+In the future (but not just now) the order will be weighted
+so that:
+.IP \- 3x
+Albums played recently are less likely to be played now.
+.IP \-
+Albums which you abort (using Ctrl-C) are less likely to be
+played again soon.
+.IP \-
+Long albums are (perhaps) less likely to be played than EPs
+and singles.
+.PP
+Also, there will have to be some saved state between invocations,
+so the selection on Monday affects the Tuesday selection even
+if you shut down your computer inbetween.
+.
+.SH "OPTIONS"
+.
+\-
+.
+.SH "LICENSE"
+Modified BSD.
+.
+.SH "AUTHOR"
+J\(:orgen Grahn
+.IR \[fo]grahn+src@snipabacken.se\[fc] .
+.
+.SH "SEE ALSO"
+.BR ogg123 (1),
+.BR mpg321 (1).
