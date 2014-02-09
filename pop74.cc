@@ -32,11 +32,70 @@
 #include "find.h"
 
 
+namespace {
+
+    const char* version()
+    {
+	return "0.1";
+    }
+}
+
+
 int main(int argc, char ** argv)
 {
+    using std::string;
+
+    const string prog = argv[0] ? argv[0] : "pop74";
+    const string usage = string("usage: ")
+	+ prog + " directory\n"
+	"       "
+	+ prog + " --version\n"
+	"       "
+	+ prog + " --help";
+    const char optstring[] = "";
+    const struct option long_options[] = {
+	{"version", 0, 0, 'V'},
+	{"help", 0, 0, 'H'},
+	{0, 0, 0, 0}
+    };
+
+    std::cin.sync_with_stdio(false);
+    std::cout.sync_with_stdio(false);
+
+    int ch;
+    while((ch = getopt_long(argc, argv,
+			    optstring,
+			    &long_options[0], 0)) != -1) {
+	switch(ch) {
+	case 'V':
+	    std::cout << prog << ' ' << version() << '\n'
+		      << "Copyright (c) 2014 Jörgen Grahn\n";
+	    return 0;
+	    break;
+	case 'H':
+	    std::cout << usage << '\n';
+	    return 0;
+	    break;
+	case ':':
+	case '?':
+	    std::cerr << usage << '\n';
+	    return 1;
+	    break;
+	default:
+	    break;
+	}
+    }
+
+    if(argv+optind+1 != argv+argc) {
+	std::cerr << usage << '\n';
+	return 1;
+    }
+
+    const char* const directory = argv[optind];
+
     std::vector<Album> v;
 
-    pop::find(v, "../../ogg");
+    pop::find(v, directory);
     for(std::vector<Album>::const_iterator i = v.begin();
 	i != v.end();
 	i++) {

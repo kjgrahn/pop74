@@ -88,7 +88,9 @@ namespace {
 
 	closedir(dh);
 
-	v.push_back(a);
+	if(!a.empty()) {
+	    v.push_back(a);
+	}
     }
 }
 
