@@ -26,28 +26,40 @@
  */
 #include "album.h"
 
+#include "basename.h"
+#include "child.h"
+
 #include <iostream>
 
 
-Album::Album(const std::string& path)
-    : path(path)
-{}
+namespace {
 
+    bool play(const std::string& f)
+    {
+	std::ostream& os = std::cout;
+	os << f << std::endl;
 
-Album& Album::push_back(const char* name)
-{
-    names.insert(name);
-    return *this;
+	const char* const argv[] = { "ogg123",
+				     "-q",
+				     "--",
+				     f.c_str() };
+	Child ogg(argv, argv+4);
+	ogg.fork();
+	ogg.wait();
+	return !ogg.crashed() && ogg.exit_status()==0;
+    }
 }
 
 
-std::ostream& Album::put(std::ostream& os) const
+/**
+ * Play the album, from start to finish.
+ */
+bool Album::play() const
 {
-    return os << path << " [" << names.size() << ']';
-}
+    for(const_iterator i = begin(); i!=end(); i++) {
 
-
-std::ostream& operator<< (std::ostream& os, const Album& val)
-{
-    return  val.put(os);
+	const std::string file = path::join(path, *i);
+	if(!::play(file)) return false;
+    }
+    return true;
 }

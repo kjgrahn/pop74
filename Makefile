@@ -11,6 +11,7 @@ all: pop74.1
 all: tests
 
 libpop.a: album.o
+libpop.a: play.o
 libpop.a: child.o
 libpop.a: find.o
 libpop.a: basename.o
@@ -68,6 +69,8 @@ love:
 
 album.o: album.h
 basename.o: basename.h
+child.o: child.h
 find.o: find.h album.h basename.h
+play.o: album.h
 pop74.o: find.h album.h
 test/test_path.o: basename.h

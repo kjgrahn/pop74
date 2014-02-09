@@ -48,7 +48,7 @@ namespace {
 	    i != v.end();
 	    i++) {
 
-	    std::cout << *i << '\n';
+	    i->play();
 	}
     }
 }

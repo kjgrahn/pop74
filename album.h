@@ -29,7 +29,7 @@
 #define POP74_ALBUM_H
 
 #include <string>
-#include <vector>
+#include <set>
 #include <iosfwd>
 
 /**
@@ -45,12 +45,13 @@ public:
     bool empty() const { return names.empty(); }
 
     std::ostream& put(std::ostream& os) const;
+    bool play() const;
 
 private:
     std::string path;
-    std::vector<std::string> names;
+    std::set<std::string> names;
 
-    typedef std::vector<std::string>::const_iterator const_iterator;
+    typedef std::set<std::string>::const_iterator const_iterator;
     const_iterator begin() const { return names.begin(); }
     const_iterator end() const { return names.end(); }
 };
