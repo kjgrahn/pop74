@@ -1,4 +1,5 @@
-/*
+/* -*- c++ -*-
+ *
  * Copyright (c) 2014 Jörgen Grahn
  * All rights reserved.
  *
@@ -24,46 +25,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "album.h"
+#ifndef POP74_INFO_H
+#define POP74_INFO_H
 
-#include "info.h"
-#include "basename.h"
-#include "child.h"
-
-#include <iostream>
-
-
-namespace {
-
-    bool play(const std::string& f)
-    {
-	const char* const argv[] = { "ogg123",
-				     "-q",
-				     "--",
-				     f.c_str() };
-	Child ogg(argv, argv+4);
-	ogg.fork();
-	ogg.wait();
-	return !ogg.crashed() && ogg.exit_status()==0;
-    }
-}
+#include <string>
+#include <iosfwd>
 
 
 /**
- * Play the album, from start to finish.
+ * Is this a supported soundfile and if so,
+ * what's its metadata?
  */
-bool Album::play() const
-{
-    for(const_iterator i = begin(); i!=end(); i++) {
+struct TrackInfo {
 
-	const std::string file = path::join(path, *i);
-	const TrackInfo track = info(file);
-	if(track.kind != TrackInfo::OGG) {
-	    std::cerr << "error: skipping " << file << ": not ogg\n";
-	    continue;
-	}
-	format(std::cout, track) << std::endl;
-	if(!::play(file)) return false;
-    }
-    return true;
-}
+    enum Kind { UNKNOWN_KIND,
+		OGG,
+		MP3 };
+
+    TrackInfo()
+	: kind(UNKNOWN_KIND)
+    {}
+
+    Kind kind;
+    std::string artist;
+    std::string album;
+    std::string title;
+    std::string date;
+    std::string track;
+};
+
+
+TrackInfo info(const std::string& path);
+
+std::ostream& format(std::ostream& os, const TrackInfo& val);
+
+#endif

@@ -24,46 +24,49 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "album.h"
-
+#include "ogginfo.h"
 #include "info.h"
-#include "basename.h"
-#include "child.h"
 
-#include <iostream>
+#include <vorbis/vorbisfile.h>
 
 
 namespace {
 
-    bool play(const std::string& f)
+    const char* find(const char* s, char ch)
     {
-	const char* const argv[] = { "ogg123",
-				     "-q",
-				     "--",
-				     f.c_str() };
-	Child ogg(argv, argv+4);
-	ogg.fork();
-	ogg.wait();
-	return !ogg.crashed() && ogg.exit_status()==0;
+	while(*s && *s != ch) {
+	    s++;
+	}
+	return s;
     }
 }
 
 
-/**
- * Play the album, from start to finish.
- */
-bool Album::play() const
+TrackInfo ogg(const std::string& path)
 {
-    for(const_iterator i = begin(); i!=end(); i++) {
+    TrackInfo track;
 
-	const std::string file = path::join(path, *i);
-	const TrackInfo track = info(file);
-	if(track.kind != TrackInfo::OGG) {
-	    std::cerr << "error: skipping " << file << ": not ogg\n";
-	    continue;
+    OggVorbis_File vf;
+    int err = ov_fopen(path.c_str(), &vf);
+    if(!err) {
+	track.kind = TrackInfo::OGG;
+	const vorbis_comment c = *ov_comment(&vf, -1);
+
+	for(int i=0; i<c.comments; i++) {
+	    const char* s = c.user_comments[i];
+	    const char* eq = find(s, '=');
+	    if(!*eq) continue;
+	    const std::string key(s, eq-s);
+	    const std::string val(eq+1);
+	    if(key=="artist") track.artist = val;
+	    else if(key=="album") track.album = val;
+	    else if(key=="title") track.title = val;
+	    else if(key=="date") track.date = val;
+	    else if(key=="tracknumber") track.track = val;
 	}
-	format(std::cout, track) << std::endl;
-	if(!::play(file)) return false;
+
+	ov_clear(&vf);
     }
-    return true;
+
+    return track;
 }
