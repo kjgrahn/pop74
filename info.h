@@ -57,6 +57,9 @@ struct TrackInfo {
 
 TrackInfo info(const std::string& path);
 
-std::ostream& format(std::ostream& os, const TrackInfo& val);
+std::ostream& format_album(std::ostream& os, const TrackInfo& info,
+			   const std::string& path);
+std::ostream& format_track(std::ostream& os, const TrackInfo& info,
+			   const std::string& path);
 
 #endif

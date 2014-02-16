@@ -63,7 +63,10 @@ bool Album::play() const
 	switch(track.kind) {
 	case TrackInfo::OGG:
 	case TrackInfo::MP3:
-	    format(std::cout, track) << std::endl;
+	    if(i==begin()) {
+		format_album(std::cout, track, path) << std::endl;
+	    }
+	    format_track(std::cout, track, file) << std::endl;
 	    if(!::play(file, track.kind)) return false;
 	    break;
 	default:
