@@ -13,6 +13,7 @@ all: tests
 libpop.a: album.o
 libpop.a: info.o
 libpop.a: ogginfo.o
+libpop.a: mp3info.o
 libpop.a: play.o
 libpop.a: child.o
 libpop.a: find.o
@@ -20,7 +21,7 @@ libpop.a: basename.o
 	$(AR) -r $@ $^
 
 pop74: pop74.o libpop.a
-	$(CXX) $(CXXFLAGS) -o $@ $< -L. -lpop -lvorbisfile
+	$(CXX) $(CXXFLAGS) -o $@ $< -L. -lpop -lvorbisfile -lid3
 
 CFLAGS=-W -Wall -pedantic -std=c99 -g -Os
 CXXFLAGS=-W -Wall -pedantic -std=c++98 -g -Os
@@ -73,8 +74,9 @@ album.o: album.h
 basename.o: basename.h
 child.o: child.h
 find.o: find.h album.h basename.h
-info.o: info.h ogginfo.h
+info.o: info.h ogginfo.h mp3info.h
+mp3info.o: mp3info.h info.h
 ogginfo.o: ogginfo.h info.h
-play.o: album.h basename.h child.h
+play.o: album.h info.h basename.h child.h
 pop74.o: find.h album.h
 test/test_path.o: basename.h

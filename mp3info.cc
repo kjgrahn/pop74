@@ -24,51 +24,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "album.h"
-
+#include "mp3info.h"
 #include "info.h"
-#include "basename.h"
-#include "child.h"
 
-#include <iostream>
-
+#include <id3/tag.h>
+#include <id3/misc_support.h>
 
 namespace {
 
-    bool play(const std::string& f,
-	      TrackInfo::Kind kind)
+    std::string str(const char* s)
     {
-	bool ov = (kind==TrackInfo::OGG);
-	const char* const argv[] = { ov ? "ogg123" : "mpg321",
-				     "-q",
-				     "--",
-				     f.c_str() };
-	Child ogg(argv, argv+4);
-	ogg.fork();
-	ogg.wait();
-	return !ogg.crashed() && ogg.exit_status()==0;
+	if(s) return s;
+	return "";
     }
 }
 
 
-/**
- * Play the album, from start to finish.
- */
-bool Album::play() const
+TrackInfo mp3(const std::string& path)
 {
-    for(const_iterator i = begin(); i!=end(); i++) {
+    TrackInfo track;
 
-	const std::string file = path::join(path, *i);
-	const TrackInfo track = info(file);
-	switch(track.kind) {
-	case TrackInfo::OGG:
-	case TrackInfo::MP3:
-	    format(std::cout, track) << std::endl;
-	    if(!::play(file, track.kind)) return false;
-	    break;
-	default:
-	    std::cerr << "error: skipping " << file << ": not playable\n";
-	}
-    }
-    return true;
+    const ID3_Tag tag(path.c_str());
+    const ID3_Tag* const p = &tag;
+
+    track.kind   = TrackInfo::MP3;
+    track.artist = str(ID3_GetArtist(p));
+    track.album  = str(ID3_GetAlbum(p));
+    track.title  = str(ID3_GetTitle(p));
+    track.date   = str(ID3_GetYear(p));
+    track.track  = str(ID3_GetTrack(p));
+    return track;
 }

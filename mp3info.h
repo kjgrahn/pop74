@@ -1,4 +1,5 @@
-/*
+/* -*- c++ -*-
+ *
  * Copyright (c) 2014 Jörgen Grahn
  * All rights reserved.
  *
@@ -24,51 +25,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "album.h"
+#ifndef POP74_INFO_MP3_H
+#define POP74_INFO_MP3_H
 
-#include "info.h"
-#include "basename.h"
-#include "child.h"
+#include <string>
 
-#include <iostream>
+class TrackInfo;
+TrackInfo mp3(const std::string& path);
 
-
-namespace {
-
-    bool play(const std::string& f,
-	      TrackInfo::Kind kind)
-    {
-	bool ov = (kind==TrackInfo::OGG);
-	const char* const argv[] = { ov ? "ogg123" : "mpg321",
-				     "-q",
-				     "--",
-				     f.c_str() };
-	Child ogg(argv, argv+4);
-	ogg.fork();
-	ogg.wait();
-	return !ogg.crashed() && ogg.exit_status()==0;
-    }
-}
-
-
-/**
- * Play the album, from start to finish.
- */
-bool Album::play() const
-{
-    for(const_iterator i = begin(); i!=end(); i++) {
-
-	const std::string file = path::join(path, *i);
-	const TrackInfo track = info(file);
-	switch(track.kind) {
-	case TrackInfo::OGG:
-	case TrackInfo::MP3:
-	    format(std::cout, track) << std::endl;
-	    if(!::play(file, track.kind)) return false;
-	    break;
-	default:
-	    std::cerr << "error: skipping " << file << ": not playable\n";
-	}
-    }
-    return true;
-}
+#endif

@@ -25,7 +25,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "info.h"
+
 #include "ogginfo.h"
+#include "mp3info.h"
 
 #include <iostream>
 
@@ -33,6 +35,9 @@
 TrackInfo info(const std::string& path)
 {
     TrackInfo track = ogg(path);
+    if(track.kind!=TrackInfo::OGG) {
+	track = mp3(path);
+    }
     return track;
 }
 
