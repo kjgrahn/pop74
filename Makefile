@@ -74,7 +74,7 @@ album.o: album.h
 basename.o: basename.h
 child.o: child.h
 find.o: find.h album.h basename.h
-info.o: info.h ogginfo.h mp3info.h
+info.o: info.h ogginfo.h mp3info.h basename.h
 mp3info.o: mp3info.h info.h
 ogginfo.o: ogginfo.h info.h
 play.o: album.h info.h basename.h child.h
