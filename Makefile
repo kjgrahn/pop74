@@ -21,7 +21,7 @@ libpop.a: basename.o
 	$(AR) -r $@ $^
 
 pop74: pop74.o libpop.a
-	$(CXX) $(CXXFLAGS) -o $@ $< -L. -lpop -lvorbisfile -lid3
+	$(CXX) $(CXXFLAGS) -o $@ $< -L. -lpop -lvorbisfile -lid3tag
 
 CFLAGS=-W -Wall -pedantic -std=c99 -g -Os
 CXXFLAGS=-W -Wall -pedantic -std=c++98 -g -Os

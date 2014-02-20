@@ -87,7 +87,6 @@ std::ostream& format_album(std::ostream& os, const TrackInfo& info,
 	os << last2(dir) << '/';
     }
     return os;
-
 }
 
 
